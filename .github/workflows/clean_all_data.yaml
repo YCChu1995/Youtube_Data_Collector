@@ -1,4 +1,4 @@
-name: data_pipeline_workflow
+name: clean_all_data_workflow
 
 on:
   # push: # uncomment to run on push
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:  # manual triggers
 
 jobs:
-  run_data_pipeline:
+  clean_all_data:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo content
@@ -23,20 +23,14 @@ jobs:
         run: pip install -r requirements.txt
       - name: Create a google service account JSON file
         run: cat ./google_service_account.json | base64
-        # run: cat /home/runner/work/<Project-Name>/<Project-Name>/app/google-services.json | base64
       - name: Putting secrets into the google service account JSON file
         env:
           DATA: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: echo $DATA > ./google_service_account.json
-        # run: echo $DATA > /home/runner/work/<Project-Name>/<Project-Name>/app/google-services.json
-      # - name: Create google service account JSON file
-      #   env:
-      #     GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
-      #   run: echo $GOOGLE_SERVICE_ACCOUNT_JSON | base64 -di > ./google_service_account.json
-      - name: Run data pipeline
-        env:
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }} # import API key
-        run: python ./main_codes/data_pipeline.py # run data pipeline
+      - name: Clean all local data
+        run: python ./main_codes/clean_all_data.py # clean all local data
+      - name: Clean all online data
+        run: python ./main_codes/clean_online_data.py # clean all online data
       - name: Delete the secret file
         run: rm ./google_service_account.json
       - name: Check for changes # create env variable indicating if any changes were made
@@ -49,5 +43,5 @@ jobs:
       - name: Commit and push if changes
         if: env.changes == 'true' # if changes made push new data to repo
         run: |
-          git commit -m "store crawled data"
+          git commit -m "clean all data"
           git push
