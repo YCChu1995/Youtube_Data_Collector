@@ -51,3 +51,42 @@ jobs:
         run: |
           git commit -m "store crawled data"
           git push
+
+  clean-all-data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo content
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Use the PAT instead of the default GITHUB_TOKEN
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Create a google service account JSON file
+        run: cat ./google_service_account.json | base64
+      - name: Putting secrets into the google service account JSON file
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: echo $DATA > ./google_service_account.json
+      - name: Clean all local data
+        run: python ./main_codes/clean_all_data.py # clean all local data
+      - name: Clean all online data
+        run: python ./main_codes/clean_online_data.py # clean all online data
+      - name: Delete the secret file
+        run: rm ./google_service_account.json
+      - name: Check for changes # create env variable indicating if any changes were made
+        id: git-check
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@github.com'
+          git add .
+          git diff --staged --quiet || echo "changes=true" >> $GITHUB_ENV 
+      - name: Commit and push if changes
+        if: env.changes == 'true' # if changes made push new data to repo
+        run: |
+          git commit -m "clean all data"
+          git push
