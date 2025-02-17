@@ -1,7 +1,7 @@
 from enum import Enum
 from dataclasses import dataclass
 import pandas as pd
-from datetime import datetime
+import datetime
 from googleapiclient.http import MediaFileUpload
 from time import time
 from sys import path as sys_path
@@ -24,7 +24,7 @@ class DataCollector:
         self.__youtube_crawler = YouTubeCrawler(location)
         self.__youtube_videos = []
         self.__show_progress_bar = show_progress_bar
-        self.__current_timestamp = datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y%m%d%H")
+        self.__current_timestamp = datetime.datetime.now().astimezone(datetime.timezone(datetime.timedelta(hours=8))).strftime("%Y%m%d%H")
         
         running_time: str = get_refined_time_string(time() - start_time)
         print(f"Data_Collector initialized in \033[92m{running_time}\033[0m !", end='\n', flush=True)
