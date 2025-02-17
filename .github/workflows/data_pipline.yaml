@@ -37,7 +37,8 @@ jobs:
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }} # import API key
         run: python ./main_codes/data_pipeline.py # run data pipeline
-
+      - name: Delete the secret file
+        run: rm ./google_service_account.json
       - name: Check for changes # create env variable indicating if any changes were made
         id: git-check
         run: |
