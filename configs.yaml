@@ -6,9 +6,9 @@ file_names_of_saved_data:
     video_comments: "video_comments.parquet"
 
 folder_name_to_save_data:
-    trending: "data/trending"
-    politics: "data/politics"
-    news: "data/news"
+    trending: "./data/trending"
+    politics: "./data/politics"
+    news: "./data/news"
 
 parent_folder_id_to_upload_data:
     trending: "17ndnKwwil9JRo0gQyMZeJDAdkNjNkVlb"

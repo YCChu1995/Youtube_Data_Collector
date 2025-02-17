@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     for interested_category in load_configs()['folder_name_to_save_data'].keys():
         data_collector.set_interest_categories(interested_category)
-        data_collector.collect_videos(max_videos=10, max_comments=100)
+        data_collector.collect_videos(max_videos=1, max_comments=1)
         data_collector.store_data()
         data_collector.clean_cached_data()
 
