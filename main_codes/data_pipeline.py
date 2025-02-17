@@ -4,7 +4,7 @@ from data_collector import DataCollector
 from utilities import load_configs
 
 if __name__ == '__main__':
-    data_collector = DataCollector('TW', show_progress_bar=False)
+    data_collector = DataCollector('TW', show_progress_bar=True)
 
     for interested_category in load_configs()['folder_name_to_save_data'].keys():
         data_collector.set_interest_categories(interested_category)
