@@ -1,0 +1,2 @@
+1. add log
+2. send gmail if there is any error

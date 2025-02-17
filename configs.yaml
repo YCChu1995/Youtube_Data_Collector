@@ -1,0 +1,21 @@
+test: false
+
+file_names_of_saved_data:
+    channel_info: "channel_info.parquet"
+    video_info: "video_info.parquet"
+    video_comments: "video_comments.parquet"
+
+folder_name_to_save_data:
+    trending: "data/trending"
+    politics: "data/politics"
+    news: "data/news"
+
+parent_folder_id_to_upload_data:
+    trending: "17ndnKwwil9JRo0gQyMZeJDAdkNjNkVlb"
+    politics: "1pk7Sbf89tzWkIkJ3-s8ntHYOYbjkcG5M"
+    news: "1fMak8SS0h_oKD54ZNu2LDQUV8P0M3yiL"
+
+google_service_account_file_path: "google_service_account.json"
+
+
+    

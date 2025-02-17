@@ -1,0 +1,52 @@
+name: data-pipeline-workflow
+
+on:
+  # push: # uncomment to run on push
+  schedule:
+    - cron: "0 */6 * * *" # run every 6th hour
+  workflow_dispatch:  # manual triggers
+
+jobs:
+  run-data-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo content
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}  # Use the PAT instead of the default GITHUB_TOKEN
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Create a google service account JSON file
+        run: cat ./google_service_account.json | base64
+        # run: cat /home/runner/work/<Project-Name>/<Project-Name>/app/google-services.json | base64
+      - name: Putting secrets into the google service account JSON file
+        env:
+          DATA: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+        run: echo $DATA > ./google_service_account.json
+        # run: echo $DATA > /home/runner/work/<Project-Name>/<Project-Name>/app/google-services.json
+      # - name: Create google service account JSON file
+      #   env:
+      #     GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      #   run: echo $GOOGLE_SERVICE_ACCOUNT_JSON | base64 -di > ./google_service_account.json
+      - name: Run data pipeline
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }} # import API key
+        run: python ./main_codes/data_pipeline.py # run data pipeline
+
+      - name: Check for changes # create env variable indicating if any changes were made
+        id: git-check
+        run: |
+          git config user.name 'github-actions'
+          git config user.email 'github-actions@github.com'
+          git add .
+          git diff --staged --quiet || echo "changes=true" >> $GITHUB_ENV 
+      - name: Commit and push if changes
+        if: env.changes == 'true' # if changes made push new data to repo
+        run: |
+          git commit -m "updated video index"
+          git push
