@@ -1,7 +1,7 @@
 name: clean_all_data_workflow
 
 on:
-  # push: # uncomment to run on push
+  # push: # run on push
   # schedule:
   #   - cron: "0 */6 * * *" # run every 6th hour
   workflow_dispatch:  # manual triggers

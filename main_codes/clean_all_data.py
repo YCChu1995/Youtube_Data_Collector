@@ -12,6 +12,7 @@ def clean_all_data():
 
     for DIRECTORY in DIRECTORIES.values():
         for file_name in os.listdir(DIRECTORY):
+            if file_name == "empty.txt": continue # Skip the empty file that is used to keep the folder structure
             os.remove(DIRECTORY+'/'+file_name)
             cleaned_data_count += 1
 
