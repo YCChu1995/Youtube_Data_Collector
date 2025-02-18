@@ -3,7 +3,7 @@ name: clean_all_data_workflow
 on:
   # push: # run on push
   # schedule:
-  #   - cron: "0 */6 * * *" # run every 6th hour
+  #   - cron: "1 0 * * *" # run every day
   workflow_dispatch:  # manual triggers
 
 jobs:
